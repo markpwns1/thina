@@ -1,0 +1,4 @@
+let create_generic = (f: (any) => any) => ((_: $T) => f(_))
+let _create_array = (_: $T) => [ ] as [$T]
+let create_array = create_generic(_create_array)
+let a = create_array(<string>)
