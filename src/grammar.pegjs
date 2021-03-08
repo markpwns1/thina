@@ -216,8 +216,13 @@ func_arg "function argument"
         };
     }
 
+generic_list
+    = head:type tail:(_ "," _ type)* {
+        return [ ...(head? [ head ] : [ ]), ...(tail? tail.map(x => x[2]) : [ ]) ];
+    }
+
 function "function"
-    = "(" _ head:func_arg? tail:("," _ func_arg)* ")" returnType:(_ ":" _ type)? _ "=>" _ body:expr {
+    = /*generics:("<" _ generic_list _ ">")?*/ "(" _ head:func_arg? tail:("," _ func_arg)* ")" returnType:(_ ":" _ type)? _ "=>" _ body:expr {
         if(!head && tail.length > 0)
             error("Invalid parameter syntax");
 
@@ -225,6 +230,7 @@ function "function"
             op: "function",
             params: [ ...(head? [ head ] : [ ]), ...(tail? tail.map(x => x[2]) : [ ]) ],
             returnType: returnType? returnType[3] : undefined,
+            // generic:
             body: body
         };
     }
